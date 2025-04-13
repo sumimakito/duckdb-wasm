@@ -53,7 +53,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             for await (const batch of result) {
                 batches.push(batch);
             }
-            const table = await new arrow.Table<{ cnt: arrow.Int }>(batches);
+            const table = new arrow.Table<{ cnt: arrow.Int }>(batches);
             expect(table.getChildAt(0)?.toArray()).toEqual(
                 new Int32Array([24002, 25403, 26120, 26830, 27550, 28106, 29120, 29555]),
             );
@@ -67,7 +67,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             for await (const batch of result) {
                 batches.push(batch);
             }
-            const table = await new arrow.Table<{ cnt: arrow.Int }>(batches);
+            const table = new arrow.Table<{ cnt: arrow.Int }>(batches);
             expect(table.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
         });
 
@@ -92,7 +92,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             for await (const batch of result) {
                 batches.push(batch);
             }
-            const table = await new arrow.Table<{ cnt: arrow.Int }>(batches);
+            const table = new arrow.Table<{ cnt: arrow.Int }>(batches);
             expect(table.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
         });
 
@@ -116,7 +116,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             for await (const batch of result1) {
                 batches1.push(batch);
             }
-            const table1 = await new arrow.Table<{ cnt: arrow.Int }>(batches1);
+            const table1 = new arrow.Table<{ cnt: arrow.Int }>(batches1);
             expect(table1.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
         });
 
@@ -141,7 +141,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             for await (const batch of result1) {
                 batches1.push(batch);
             }
-            const table1 = await new arrow.Table<{ cnt: arrow.Int }>(batches1);
+            const table1 = new arrow.Table<{ cnt: arrow.Int }>(batches1);
             expect(table1.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
         });
 
@@ -169,7 +169,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 for await (const batch of result1) {
                     batches1.push(batch);
                 }
-                const table1 = await new arrow.Table<{ cnt: arrow.Int }>(batches1);
+                const table1 = new arrow.Table<{ cnt: arrow.Int }>(batches1);
                 expect(table1.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
             }
 
@@ -179,7 +179,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 for await (const batch of result2) {
                     batches2.push(batch);
                 }
-                const table2 = await new arrow.Table<{ cnt: arrow.Int }>(batches2);
+                const table2 = new arrow.Table<{ cnt: arrow.Int }>(batches2);
                 expect(table2.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
             }
 
@@ -189,7 +189,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 for await (const batch of result3) {
                     batches3.push(batch);
                 }
-                const table3 = await new arrow.Table<{ cnt: arrow.Int }>(batches3);
+                const table3 = new arrow.Table<{ cnt: arrow.Int }>(batches3);
                 expect(table3.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
             }
 
@@ -215,7 +215,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             for await (const batch of result) {
                 batches.push(batch);
             }
-            const table = await new arrow.Table<{ cnt: arrow.Int }>(batches);
+            const table = new arrow.Table<{ cnt: arrow.Int }>(batches);
             expect(table.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
 
             await db.dropFile('test.csv');
@@ -252,7 +252,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 for await (const batch of result1) {
                     batches1.push(batch);
                 }
-                const table1 = await new arrow.Table<{ cnt: arrow.Int }>(batches1);
+                const table1 = new arrow.Table<{ cnt: arrow.Int }>(batches1);
                 expect(table1.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
             }
             {
@@ -261,7 +261,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 for await (const batch of result2) {
                     batches2.push(batch);
                 }
-                const table2 = await new arrow.Table<{ cnt: arrow.Int }>(batches2);
+                const table2 = new arrow.Table<{ cnt: arrow.Int }>(batches2);
                 expect(table2.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
             }
             {
@@ -270,7 +270,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 for await (const batch of result3) {
                     batches3.push(batch);
                 }
-                const table3 = await new arrow.Table<{ cnt: arrow.Int }>(batches3);
+                const table3 = new arrow.Table<{ cnt: arrow.Int }>(batches3);
                 expect(table3.getChildAt(0)?.get(0)).toBeGreaterThan(60_000);
             }
 
@@ -291,7 +291,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             })).toBeRejectedWithError(Error, /file or directory could not be found/);
 
             await db_.terminate();
-            await worker.terminate();
+            worker.terminate(); // Sync
 
             // Files should not be found with DuckDBAccessMode.READ_ONLY
             const opfsRoot = await navigator.storage.getDirectory();
@@ -311,7 +311,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             })).toBeRejectedWithError(Error, /file or directory could not be found/);
 
             await db_.terminate();
-            await worker.terminate();
+            worker.terminate(); // Sync
         });
 
         it('should open a non-existent DB file and mkdir in read-write', async () => {
@@ -325,8 +325,14 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
                 accessMode: duckdb.DuckDBAccessMode.READ_WRITE,
             })).toBeResolved();
 
+            const conn = await db_.connect();
+
+            // Should be able to create a table
+            await expectAsync(conn.query('CREATE TABLE test (i INTEGER);')).toBeResolved();
+            await expectAsync(conn.query('CHECKPOINT;')).toBeResolved();
+
             await db_.terminate();
-            await worker.terminate();
+            worker.terminate(); // Sync
         });
 
         it('should open a non-existent DB file in read-write and create files', async () => {
@@ -349,7 +355,7 @@ export function testOPFS(baseDir: string, bundle: () => duckdb.DuckDBBundle): vo
             })).toBeResolved();
 
             await db_.terminate();
-            await worker.terminate();
+            worker.terminate(); // Sync
 
             // Files should be found with DuckDBAccessMode.READ_WRITE
             await expectAsync(opfsRoot.getFileHandle('non_existent_2.db', { create: false })).toBeResolved();
